@@ -39,6 +39,12 @@ const projects = [
     intro: 'tutorial on react query',
     link: '/react-query'
   },
+  {
+    name: 'Habit  Tracker',
+    image: 'path/to/project2-image.jpg',
+    intro: 'Habit tracker built with material ui and Redux Toolkit',
+    link: '/redux-toolkit'
+  },
   // Add more projects as needed
 ];
 
