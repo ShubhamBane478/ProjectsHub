@@ -12,13 +12,31 @@
 //     const postData = await response.json();
 //     return postData;
 //   };
+
+import axios from "axios";
+export const api = axios.create({
+  baseURL: "http://jsonplaceholder.typicode.com"
+})
+
+// export const axiosPost = async () => {
+//   const response = await api.get("/posts");
+//   return response.data;
+// }
+
+
+const fetchTodos = async () => {
+  const response = await api.get('/todos');
+  return response.data;
+};
+
+
+
+const fetchPostsAxios = async () => {
+  const response = await api.get("/posts");
+  return response.data;
   
-const fetchPosts = async ()=>{
-    const response = await fetch(`http://localhost:3000/posts?_sort=-id`);
-    const postData = await response.json();
-    return postData;
-}
-  const fetchTags = async () => {
+};
+ const fetchTags = async () => {
     const response = await fetch("http://localhost:3000/tags");
     const tagsData = await response.json();
     return tagsData;
@@ -37,4 +55,6 @@ const fetchPosts = async ()=>{
     return response.json();
   };
   
-  export {fetchPosts, fetchTags, addPost};
+  export {fetchTodos ,fetchPostsAxios, fetchTags, addPost};
+
+
