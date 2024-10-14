@@ -1,7 +1,8 @@
-import { keepPreviousData, useQuery } from '@tanstack/react-query';
+import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+
 import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
-import { fetchDummyPosts } from '../API/api';
+import { deletePost, fetchDummyPosts } from '../API/api';
 
 const FetchNew = () => {
   const [pageNumber, setPageNumber] = useState(1);
@@ -27,6 +28,28 @@ const FetchNew = () => {
   //   queryFn: fetchTodos,
   // staleTime:50000});
 
+  //mutation function to delete a post
+  const queryClient = useQueryClient();
+
+  const deleteMutation = useMutation({
+    mutationFn: deletePost,
+    onSuccess: (data, id) => {
+      queryClient.setQueryData(['posts', pageNumber], (curEle: { id: number }[]) => {
+        return curEle.filter((post) => post.id !== id);
+      });      // queryClient.invalidateQueries({ queryKey: ['posts'] });
+    },  });
+
+  const handleDelete = (id: number) => {
+    deleteMutation.mutate(id, {
+      onSuccess: () => {
+        console.log(`Post ${id} deleted successfully`);
+      },
+      onError: (error) => {
+        console.error(`Error deleting post ${id}:`, error);
+      },
+    });
+  };
+  
   if (postsLoading) return <div>Loading...</div>;
   if (postsError) return <div>An error occurred</div>;
 
@@ -41,11 +64,22 @@ const FetchNew = () => {
                 key={id}
                 className="bg-gray-800 p-6  shadow-lg border-l border-white text-left"
               >
+                <h6 className="text-xl font-semibold mb-2">{id}</h6>
+                <h2 className="text-xl font-semibold mb-2">{title}</h2>
+                <p className="text-gray-400">{body}</p>
                 <NavLink to={`/react-query/fetch-new/${id}`}>
-                  <h6 className="text-xl font-semibold mb-2">{id}</h6>
-                  <h2 className="text-xl font-semibold mb-2">{title}</h2>
-                  <p className="text-gray-400">{body}</p>
+                  <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 mt-2 rounded">
+                    More Details
+                  </button>
                 </NavLink>
+                <div className="container flex flex-row text-left justify-center  gap-2 mt-8 ">
+                  <button
+                    onClick={() => handleDelete(id)}
+                    className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4  rounded"
+                  >
+                    Delete Post
+                  </button>
+                </div>
               </div>
             );
           })}
@@ -72,5 +106,4 @@ const FetchNew = () => {
     </>
   );
 };
-
 export default FetchNew;

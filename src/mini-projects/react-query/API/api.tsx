@@ -27,6 +27,11 @@ export const fetchIndvPost = async (id: number) => {
     return null;
   }
 };
+
+export const deletePost = (id:number) => {
+  return api.delete(`/posts/${id}`);
+};
+
 export const axiosPost = async () => {
   const response = await api.get('/posts');
   return response.data;
