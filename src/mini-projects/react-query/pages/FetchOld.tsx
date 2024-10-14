@@ -1,12 +1,12 @@
 import React from 'react';
-import { fetchPostsAxios } from '../API/api';
+import { axiosPost } from '../API/api';
 
 const FetchOld = () => {
   const [posts, setPosts] = React.useState([]);
 
   const getPosts = async () => {
     try {
-      const postData = await fetchPostsAxios();
+      const postData = await axiosPost();
       console.log(postData);
       setPosts(postData);
     } catch (error) {
@@ -18,8 +18,6 @@ const FetchOld = () => {
   React.useEffect(() => {
     getPosts();
   }, []);
-
-  
 
   return (
     <div className="playground-learn">
