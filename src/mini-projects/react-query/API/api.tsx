@@ -32,6 +32,10 @@ export const deletePost = (id:number) => {
   return api.delete(`/posts/${id}`);
 };
 
+export const updatePost = (id:number)=>{
+  return api.patch(`/posts/${id}`,{title:'I have updated the title'})
+}
+
 export const axiosPost = async () => {
   const response = await api.get('/posts');
   return response.data;
@@ -43,7 +47,7 @@ const fetchTodos = async () => {
 };
 
 const fetchDummyPosts = async (pageNumber: number) => {
-  const response = await api.get(`/posts?&_page=${pageNumber}&_limit=3`);
+  const response = await api.get(`/posts?&_page=${pageNumber}&_limit=4`);
   return response.data;
 };
 

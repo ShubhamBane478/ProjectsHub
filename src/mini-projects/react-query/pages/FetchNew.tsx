@@ -1,10 +1,15 @@
-import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-
+import {
+  keepPreviousData,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query';
 import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
-import { deletePost, fetchDummyPosts } from '../API/api';
+import { deletePost, fetchDummyPosts, updatePost } from '../API/api';
 
 const FetchNew = () => {
+  const queryClient = useQueryClient();
   const [pageNumber, setPageNumber] = useState(1);
   const {
     data: posts,
@@ -29,27 +34,61 @@ const FetchNew = () => {
   // staleTime:50000});
 
   //mutation function to delete a post
-  const queryClient = useQueryClient();
-
   const deleteMutation = useMutation({
-    mutationFn: deletePost,
-    onSuccess: (data, id) => {
-      queryClient.setQueryData(['posts', pageNumber], (curEle: { id: number }[]) => {
-        return curEle.filter((post) => post.id !== id);
-      });      // queryClient.invalidateQueries({ queryKey: ['posts'] });
-    },  });
+    mutationFn: (id: number) => deletePost(id),
+    onSuccess: (_, id) => {
+      queryClient.setQueryData(['posts', pageNumber], (oldData: []) => {
+        return oldData.filter((post: { id: number }) => post.id !== id);
+      });
+      queryClient.invalidateQueries({ queryKey: ['posts', pageNumber] });
+    },
+    onError: (error) => {
+      console.error('Error deleting post:', error);
+      // Optionally, show an error message to the user
+    },
+  });
 
   const handleDelete = (id: number) => {
-    deleteMutation.mutate(id, {
-      onSuccess: () => {
-        console.log(`Post ${id} deleted successfully`);
-      },
-      onError: (error) => {
-        console.error(`Error deleting post ${id}:`, error);
-      },
-    });
+    deleteMutation.mutate(id);
   };
-  
+
+  //mutation function to update a post
+  const updateMutation = useMutation({
+    mutationFn: (id: number) => updatePost(id),
+    onSuccess: (apiData, postId) => {
+      console.log(apiData, postId);
+      queryClient.setQueryData(['posts', pageNumber], (postData: []) => {
+        return postData?.map(
+          (currPost: { id: number; [key: string]: string }) => {
+            return currPost.id === postId
+              ? { ...currPost, title: apiData.data.title }
+              : currPost;
+          },
+        );
+      });
+      // queryClient.invalidateQueries({ queryKey: ['posts', pageNumber] });
+    },
+    onError: (error) => {
+      console.error('Error deleting post:', error);
+      // Optionally, show an error message to the user
+    },
+  });
+
+  // const deleteMutation = useMutation({
+  //   mutationFn: (id: number) => deletePost(id),
+
+  //   onSuccess: (data, id) => {
+  //     console.log(data, id);
+  //     queryClient.setQueryData(['posts', pageNumber], (curEle: { id: number }[]) => {
+  //       return curEle.filter((post) => post.id !== id);
+  //     });      // queryClient.invalidateQueries({ queryKey: ['posts'] });
+  //   },
+  // });
+
+  // const handleDelete = (id: number) => {
+  //   deleteMutation.mutate(id);
+  // };
+
   if (postsLoading) return <div>Loading...</div>;
   if (postsError) return <div>An error occurred</div>;
 
@@ -78,6 +117,13 @@ const FetchNew = () => {
                     className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4  rounded"
                   >
                     Delete Post
+                  </button>
+
+                  <button
+                    onClick={(id) => updateMutation.mutate(id)}
+                    className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4  rounded"
+                  >
+                    Update Post
                   </button>
                 </div>
               </div>
