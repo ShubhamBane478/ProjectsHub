@@ -7,7 +7,7 @@ import HookForm from '../mini-projects/react-hook-forms/HookForm';
 import PlaygroundReact from '../mini-projects/react-playground';
 import ProductsPageQuery from '../mini-projects/product-page/ProductsPageQuery';
 import ReactQuery from '../mini-projects/react-query/ReactQuery';
-import ReduxToolkit from '../mini-projects/habit-tracker/redux-toolkit';
+import ReduxToolkit from '../playground/react-toolkit/reactToolkit';
 // import { RetracingSideBar } from '../mini-projects/animated-sidebar/RetractingSideBar';
 // import FramerMotion from '../playground/famerMotion/FramerMotionCC';
 
@@ -23,7 +23,7 @@ const AppRoutes = () => {
         <Route path='/react-playground' element={<PlaygroundReact/>} />
         <Route path='/products-page' element={<ProductsPageQuery />} />
         <Route path="/react-query/*" element={<ReactQuery />} />
-        <Route path="/redux-toolkit/*" element={<ReduxToolkit />} />
+        <Route path="/redux-toolkit/" element={<ReduxToolkit />} />
         {/* <Route path='/framer-motion' element={<FramerMotion />} /> */}
         {/* Add routes for other projects here */}
 
