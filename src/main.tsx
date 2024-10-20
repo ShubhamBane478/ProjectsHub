@@ -4,12 +4,12 @@ import { Provider } from 'react-redux';
 import App from './App.tsx';
 import './index.css';
 
-import { learnStore } from './redux/learnstore.ts';
+import { store } from './redux/store.ts';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     {/* <QueryClientProvider client={queryClient}> */}
-    <Provider store={learnStore}>
+    <Provider store={store}>
       <App />
     </Provider>
     {/* <ReactQueryDevtools initialIsOpen={false} />

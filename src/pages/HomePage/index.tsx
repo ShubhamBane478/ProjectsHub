@@ -46,9 +46,9 @@ const projects = [
     link: '/habit-tracker'
   },
   {
-    name: 'React Toolkit',
+    name: 'Redux Toolkit',
     image: 'path/to/project2-image.jpg',
-    intro: 'Habit tracker built with material ui and Redux Toolkit',
+    intro: 'Learn redux toolkit',
     link: '/redux-toolkit'
   },
   // Add more projects as needed
